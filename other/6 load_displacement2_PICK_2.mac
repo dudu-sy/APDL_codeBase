@@ -1,0 +1,24 @@
+!load displacement
+/PREP7
+ALLSEL,all
+!NSEL,s,loc,y,0
+!NSEL,r,loc,z,50
+NSEL,S,pick !GUI pick node SpringNode_conc PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK
+
+
+
+
+D,all,uy,,,,,uz
+
+
+
+
+!NSEL,s,loc,y,0
+			 !NSEL,r,loc,z,3150
+allsel,all
+NSEL,S,pick !GUI pick node SpringNode_conc PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK
+
+
+
+
+D,all,uy

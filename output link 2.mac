@@ -1,0 +1,26 @@
+ /post1  
+
+ESEL,ALL        !先选择 link 单元  
+
+etable,AxialStress,LS,1    !定义应力单元表  
+
+pletab,AxialStress,noav     !显示单元轴应力  
+
+pretab,AxialStress          !列表单元轴应力  
+
+esort,AxialStress  ! sort table
+*get,AxialStressMax,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+
+
+  
+
+etable,AxialForce,smisc,1     !定义轴力单元表  
+
+pletab,AxialForce,noav         !显示单元轴向力  
+
+pretab,AxialForce                 !列表单元轴向力
+
+
+nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+esln,s  !selct elements attached to the selected nodes
+esel,r,type,,2  !reselect frome selected elements by elements type 2

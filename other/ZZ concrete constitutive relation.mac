@@ -1,0 +1,41 @@
+!*  concrete constitutive relation, 多线性等向强化， Isotropic hardening plasticity, Multilinear.
+TB,MISO,1,1,16,0
+TBTEMP,0
+TBPT,,0,0   
+TBPT,,1.00E-04,3.42E+00 
+TBPT,,3.00E-04,9.67E+00 
+TBPT,,6.00E-04,1.67E+01 
+TBPT,,9.00E-04,2.07E+01 
+TBPT,,1.10E-03,2.21E+01 
+TBPT,,1.25E-03,2.27E+01 
+TBPT,,1.40E-03,2.30E+01 
+TBPT,,1.55E-03,2.31E+01 
+TBPT,,1.65E-03,2.30E+01 
+TBPT,,1.80E-03,2.25E+01 
+TBPT,,2.00E-03,2.16E+01 
+TBPT,,2.80E-03,1.70E+01 
+TBPT,,3.20E-03,1.50E+01 
+TBPT,,3.80E-03,1.26E+01 
+TBPT,,4.60E-03,1.02E+01 
+
+!*  concrete failure criterion, only define fc and ft
+TB,CONC,1,1,9,  
+TBTEMP,0
+TBDATA,,,,1.89,23.1,,   
+TBDATA,,,,,,,   
+
+
+!* steel constitutive relation, fy and Ec,  双线性随动强化 BKIN
+TB,BKIN,3,1,2,1 
+TBTEMP,0
+TBDATA,,360,2.00E+05,,,,
+TBDE,BKIN,2,,,  
+TB,BKIN,2,1,2,1 
+TBTEMP,0
+TBDATA,,1110,1.95E+005,,,,  
+
+!*  
+TB,BKIN,4,1,2,1 
+TBTEMP,0
+TBDATA,,360,2E5,,,, 
+

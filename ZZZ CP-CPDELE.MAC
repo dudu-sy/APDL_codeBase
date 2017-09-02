@@ -1,0 +1,5 @@
+cp,next,all,all !constraint all dof of all select nodes.
+
+cpdele,1, !deletes coupled dof sets NO.1.
+
+CPLIST,ALL

@@ -1,0 +1,6 @@
+!load temperature
+/PREP7
+!apply temperature on element
+ESEL,s,MAT,,2
+CM,Element_tendon,Element
+BFE,Element_tendon,temp,1,-404.7008547

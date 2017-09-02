@@ -1,0 +1,6 @@
+/post1
+allsel
+cmsel,s,cm_14_bottomofsolid65,node  ! select node of botteom of solid65(concrete)
+nsort,s,z  ! sort selected nodes by stress z oriention
+*get,MaxSzOfSolid65,sort,0,max   ! get max stress z oriention according to nsort
+*get,NodeNumberOfMaxSzOfSolid65,sort,0,imax   ! get Node Number where max values occurs

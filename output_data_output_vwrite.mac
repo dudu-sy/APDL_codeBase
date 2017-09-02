@@ -1,0 +1,29 @@
+! sample........
+! adiv = ' | '
+! *dim,nds, ,10
+! *dim,temps,,10
+! *vfill,nds(1),ramp,1,1
+! *vfill,temps(1),rand,70,1500
+! *cfopen,vw1.out
+! *VWRITE,'Temp: ',nds(1),temps(1),adiv, 'TREF: ',70
+! (A6,F8.0,g16.8,A3,A6,F10.4)
+! *cfclose
+
+
+! *cfopen,DataOutput1.out ! output data to DataOutput1.out
+! *VWRITE,'dataName: ',arrayName(1),scalarName,70
+! (A,F100.4,F100.4,F100.4)
+! *cfclose
+
+! !*cfopen,DataOutput1.txt,,append ! output data to DataOutput1.out, some wrong with append
+! *cfopen,DataOutput1.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+! *VWRITE,'dataName: ',UYOFNODEX(1) ! auto output whole array from 1 to end
+! !(A6,F10.4) ! ATTention: 数字位数 ， length of number
+! (A,F)	 ! output without format
+! *cfclose
+
+! /output,DataOutput1.txt,,append ! ! output data to DataOutput1.out, append, some wrong.
+! *VWRITE,'dataName: ',UYOFNODEX(1) ! auto output whole array from 1 to end
+! !(A6,F10.4) ! ATTention: 数字位数 ， length of number
+! (A,F)	 ! output without format
+! /output

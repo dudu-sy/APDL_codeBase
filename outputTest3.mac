@@ -1,0 +1,27 @@
+
+*dim,uyofnode1837,array,37
+*dim,LoadKN,array,37
+*do,i,1,37
+	! ! concrete node strain
+	! allsel,all
+	! ! node3034
+	! 	*get,strain3034(i),node,3034,epto,z
+	! ! node3034
+	
+	! ! node1837
+	! 	*get,strain1837(i),node,1837,epto,z
+	! ! node1837
+	set,i,last
+	LoadKN(i)=(i-1)*5
+	uyofnode1837(i)=uy(1837)
+
+*enddo
+
+*cfopen,DataOutputTest3-2.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+! *vwrite
+! ('Number',',  ','strain117', ',  ','strain310', ',  ','strain373', ',  ','strain247', ',  ','strain54', ',  ','strain184', ',  ','strain3034', ',  ','strain1837',) ! write title
+*VWRITE,sequ,LoadKN(1),uyofnode1837(1)
+(F4.0,2F)
+!(F4.0,9F100.4)	 ! output without format
+*cfclose
+

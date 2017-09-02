@@ -1,0 +1,34 @@
+ /post1  
+
+ESEL,ALL        !先选择单元  
+
+etable,axial stress,LS,1    !定义应力单元表  
+
+pletab,axial stress,noav     !显示单元轴应力  
+
+pretab,axial stress          !列表单元轴应力  
+
+  
+
+etable,axial force,smisc,1     !定义轴力单元表  
+
+pletab,axial force,noav         !显示单元轴向力  
+
+pretab,axial force                 !列表单元轴向力
+
+
+etable,combin39Slip,nmisc,1  !显示弹簧伸长
+pletab,combin39Slip,noav	!显示单元表 
+pretab,combin39Slip	! 列表显示单元表
+
+
+etable,LinkAxialStrainI,lepto,1  !定义应变单元表，LINK180 i 端  
+pletab,LinkAxialStrainI,noav       
+
+pretab,LinkAxialStrainI        
+
+
+etable,LinkAxialStrainI,lepto,2  !定义应变单元表，LINK180 j 端    
+pletab,LinkAxialStrainI,noav       
+
+pretab,LinkAxialStrainI    

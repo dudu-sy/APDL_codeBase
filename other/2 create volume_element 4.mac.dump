@@ -1,0 +1,150 @@
+!initial setting
+finish 
+/clear
+!y
+*afun,rad ![rad],deg
+pi=3.14159265359 !pi=acos(-1)
+!*afun,deg !Use degrees [rad] for input and output angular functions
+
+			 !set constants
+
+! !!C50
+! c50_poisson=0.2
+! c50_elastic_modulus=3.45e4 !N/mm^2
+! c50_density=2.6e-9  !t/mm^3
+! 
+! !!common steel xy
+! common_steel_xy_poisson=0.3
+! common_steel_xy_elastic_modulus=2.0e5  !N/mm^2
+! common_steel_xy_density=7.85987e-9  !t/mm^3
+! 
+! !!common steel z
+! common_steel_z_poisson=0.3
+! common_steel_z_elastic_modulus=2.0e5  !N/mm^2
+! common_steel_z_density=7.85563e-9  !t/mm^3
+! 
+! !!strand
+! strand_poisson=0.3
+! strand_elastic_modulus=1.95e5  !N/mm^2
+! strand_expension=1.1e-5  !celsius^(-1)
+! strand_area=280  !mm^2
+! strand_prestress=900  !Mpa
+! strand_density=3.1469e-8  !t/mm^3
+! decrease_T=strand_prestress/(strand_elastic_modulus*strand_expension) !celsius
+! 
+! !! inertia- apply gravity
+! inertia_gravity=10e3  !mm/s^2
+
+
+			 !create volume
+!! create volume, cut-strand
+/prep7
+K,1,-100,,, 
+K,2,100,,,  
+K,3,100,250,,   
+K,4,-100,250,,  
+A,1,2,3,4 
+VOFFST,1,3300 !generate volume by offset area1 
+/plopts,wp,1 !display working plane
+wpcsys,1,0 !align wp in WIN with specified c-sys
+wpoffs,,,150
+vsbw,all
+wpcsys,1,0
+wpoffs,,,3150
+vsbw,all
+wpcsys,1,0
+wprota,,90,
+wpoffs,,,-31
+vsbw,all
+wpoffs,,,-24
+vsbw,all
+wpoffs,,,-164
+vsbw,all
+wpcsys,1,0
+wprota,,,90
+vsbw,all
+wpoffs,,,60
+vsbw,all
+wpoffs,,,-120
+vsbw,all
+csys,0 !activate global cartesian
+allsel,all
+VGLUE,all
+NUMMRG,all,,,,low !merge items 
+NUMCMP,all !compress items
+
+
+
+			 !define element/real constants/material property
+/PREP7  
+!*  
+ET,1,SOLID65
+!*  
+ET,2,LINK180
+!stirrups , common steel x/y
+R,1,3,0.004904288,0,0,3,0.00733975, 
+RMORE,90,0,,,,, 
+!*  
+R,2,280, ,0 
+!*  
+R,3,113, ,0 !useless
+!*  
+R,4,79, ,0  
+!*  
+
+!create Springs x/y
+ET,3,14 !create combin14 
+KEYOPT,3,2,1  !dof ux
+ET,4,14 
+KEYOPT,4,2,2  !uy  
+!ET,5,39 
+!KEYOPT,5,3,3  !uz
+R,5,1E10  !combin14 real constant, K=1E10, it can be alter to match better. Or set different realconstant K at diffent nodes, to obtain better result.
+R,6,1E10  !combin14 real constant, K=1E10, it can be alter to match better
+!R,7, !unfinish, F-D
+! lack F-D
+
+			 !material property
+!mp 1: c50
+MPTEMP,1,0  
+MPDATA,EX,1,,3.45E+04   
+MPDATA,PRXY,1,,0.2  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,DENS,1,,2.6E-09  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,2,,1.95E+05   
+MPDATA,PRXY,2,,0.3
+!lack: 本构关系/破坏准则 constitutive relations/ failure criterion
+
+!strand
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,DENS,2,,3.1469E-08   
+MPDATA,ALPX,2,,1.2E-5   !expansion
+!lack: 本构关系 constitutive relation
+
+!common steel x/y
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,3,,2.00E+05   
+MPDATA,PRXY,3,,0.3  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,DENS,3,,7.85987E-09
+!lack: 本构关系 constitutive relation
+
+!common steel z
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,4,,2.00E+05   
+MPDATA,PRXY,4,,0.3  
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,DENS,4,,7.85563E-09  
+!lack: 本构关系 constitutive relation
+
+
+
+

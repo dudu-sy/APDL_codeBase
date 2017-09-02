@@ -1,0 +1,44 @@
+!solve
+FINISH  
+/SOLU
+ALLSEL,ALL 
+antype,0	!静力分析
+!TIME,10 
+
+OUTRES,erase
+OUTRES,ALL,ALL 
+outpr,all,all  !输出.output
+
+SOLCONTROL,ON
+NSUBST,20,100,5  
+autots,on	!自动时间步
+lnsrch,on !打开线性搜索
+!cnvtol,U	!使用位移收敛准则 
+!cnvtol,F	!使用力收敛准则 
+
+!SOLVE 
+
+
+*do, i, 1, 20	!assume a total of 10 load step
+	time, 10*i	! load step i at time 10*i
+
+	allsel,all
+	cmsel,s,cm_4_loadnotes1 
+	cmsel,a,cm_5_loadnotes2
+	f,all,fy,-1000*i	! change load of load step i
+	allsel,all
+	!...
+	allsel,all
+	solve
+*enddo
+
+/post1
+
+*dim,UyOfNodeX,array,20	! define array to record uy of node x
+*do, i, 1, 20
+	set,i,last	!Set the result data of (last substep of load step 1), as current
+	!*get, UyOfNodeX(i), node, 2, u, y
+	UyOfNodeX(i)=uy(1837) ! obtain uy of node 1837(at bottom of Mid of beam)
+*enddo
+
+parsav,all,ScalarAndArray,txt	! write scalar and array to ScalarAndArray.txt

@@ -1,0 +1,48 @@
+!solve
+FINISH  
+/SOLU
+ALLSEL,ALL 
+antype,0	!静力分析
+!TIME,10 
+
+OUTRES,erase
+OUTRES,ALL,ALL 
+outpr,all,all  !输出.output
+
+SOLCONTROL,ON
+NSUBST,20,100,5  
+autots,on	!自动时间步
+lnsrch,on !打开线性搜索
+cnvtol,U	!使用位移收敛准则 
+!cnvtol,F	!使用力收敛准则 
+
+!SOLVE 
+
+
+*do, i, 1, 5	! load displacement from -5 to -100
+
+	FINISH
+	clear
+	filname,
+	antype,,rest
+
+
+	time, 1000*i 	! 10,20,...!!!
+	! load displacement
+	allsel,all
+	CMSEL,S,CM_15_NODEMIDBEAM	! select nodes at mid beam
+	D,all,uy,uy(1837)-5*i 	! apply displacement
+	allsel,all
+	solve
+*enddo
+
+! /post1
+! 
+! *dim,UyOfNodeX,array,20	! define array to record uy of node x
+! *do, i, 1, 20
+	! set,i,last	!Set the result data of (last substep of load step 1), as current
+	! !*get, UyOfNodeX(i), node, 2, u, y
+	! UyOfNodeX(i)=uy(1837) ! obtain uy of node 1837(at bottom of Mid of beam)
+! *enddo
+! 
+! parsav,all,ScalarAndArray2,txt	! write scalar and array to ScalarAndArray.txt

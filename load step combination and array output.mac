@@ -1,0 +1,19 @@
+finish
+/solu
+!...
+*do, i, 1, 10	!assume a total of 10 load step
+	time, 10*i	! load step i at time 10*i
+	f,2,fy,-1000*i	! change load of load step i
+	!...
+	solve
+*enddo
+
+/post1
+*dim,UyOfNodeX,array,10	! define array to record uy of node x
+*do, i, 1, 10
+	set,i,last	!Set the result data of (last substep of load step 1), as current
+	!*get, UyOfNodeX(i), node, 2, u, y
+	UyOfNodeX(i)=uy(2) ! obtain uy of node 2
+*enddo
+
+parsav,all,ScalarAndArray,txt	! write scalar and array to ScalarAndArray.txt

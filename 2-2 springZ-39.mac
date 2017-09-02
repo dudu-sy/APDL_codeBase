@@ -1,0 +1,13 @@
+/prep7
+
+!create Springs
+!ET,3,14 !create combin14 
+!KEYOPT,3,2,1  !dof ux
+!ET,4,14 
+!KEYOPT,4,2,2  !uy  
+ET,5,39 
+KEYOPT,5,3,3  !uz
+!R,5,1E10  !combin14 real constant, K=1E10, it can be alter to match better. Or set different realconstant K at diffent nodes, to obtain better result.
+!R,6,1E10  !combin14 real constant, K=1E10, it can be alter to match better
+R,7,  !unfinish, F-D
+! lack F-D

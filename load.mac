@@ -1,0 +1,5 @@
+allsel,all
+cmsel,s,cm_4_loadnotes1
+cmsel,a,cm_5_loadnotes2
+f,all,fy,-100000/6	! change load of load step i
+allsel,all

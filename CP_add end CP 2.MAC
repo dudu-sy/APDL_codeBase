@@ -1,0 +1,9 @@
+! 100001/100002 is tendon end
+! 2396/1556 is concrete end
+cp,next,ux,100001,2396
+cp,next,uy,100001,2396
+
+cp,next,ux,100067,1556
+cp,next,uy,100067,1556
+
+cp,next,uz,all  ! couple all selected notes
