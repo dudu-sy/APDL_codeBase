@@ -1,7 +1,0 @@
- /post1  
-
-! select combin39 elements
-
-etable,combin39Slip,nmisc,1  !显示弹簧伸长
-pletab,combin39Slip,noav	!显示单元表 
-pretab,combin39Slip	! 列表显示单元表
