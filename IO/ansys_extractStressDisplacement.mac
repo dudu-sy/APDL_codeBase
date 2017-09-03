@@ -1,0 +1,22 @@
+! ansys 提取节点应力和应变  
+*CREATE,GET_node_inf,mac,  
+*GET,Nnod,NODE,0,COUNT         !获取所选择的节点总数
+*DIM,S_Xyz,ARRAY,NNOD,5        !定义1个数组存放数据
+*GET,Nd,NODE,0,NUM,MIN         !获取最小的节点编号
+*DO,I,1,Nnod,1  
+S_Xyz(I,1)=Nd                  !将节点列表放数组第1列
+S_Xyz(I,2)=NX(Nd)              !节点的X坐标放数组第2列
+S_Xyz(I,3)=NY(Nd)              !节点的Y坐标放数组第3列
+S_Xyz(I,4)=NZ(Nd)              !节点的Z坐标放数组第4列  
+!*GET,S_Xyz(I,5),NODE,ND,S,EQV  !节点的 von mises值放数组第5列
+*GET,S_Xyz(I,5),NODE,ND,U,SUM !节点的总变形值值放数组第5列
+Nd=NDNEXT(Nd)                  !读出下一个节点编号
+*ENDDO  
+*END
+
+*CREATE,OUT_node_inf,mac,  
+*CFOPEN,node_info,txt,,
+*VWRITE,S_Xyz(1,1),S_Xyz(1,2),S_Xyz(1,3),S_Xyz(1,4),S_Xyz(1,5)  
+(F10.0,3F15.4,E15.5)   
+*CFCLOS
+*END
