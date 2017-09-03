@@ -1,0 +1,471 @@
+! sample........
+
+	! sample........
+	! adiv = ' | '
+	! *dim,nds, ,10
+	! *dim,temps,,10
+	! *vfill,nds(1),ramp,1,1
+	! *vfill,temps(1),rand,70,1500
+	! *cfopen,vw1.out
+	! *VWRITE,'Temp: ',nds(1),temps(1),adiv, 'TREF: ',70
+	! (A6,F8.0,g16.8,A3,A6,F10.4)
+	! *cfclose
+
+
+	! *cfopen,DataOutput1.out ! output data to DataOutput1.out
+	! *VWRITE,'dataName: ',arrayName(1),scalarName,70
+	! (A,F100.4,F100.4,F100.4)
+	! *cfclose
+
+	!*cfopen,DataOutput1.txt,,append ! output data to DataOutput1.out, some wrong with append
+	! *cfopen,DataOutput1.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+	! *VWRITE,'dataName: ',UYOFNODEX(1) ! auto output whole array from 1 to end
+	! !(A6,F10.4) ! ATTention: 数字位数 ， length of number
+	! (A,F)	 ! output without format
+	! *cfclose
+! sample........
+
+
+/post1
+
+NumberOfLoadStep=37
+*dim,LoadKN,array,NumberOfLoadStep
+
+*dim,UyOfNode1837,array,NumberOfLoadStep	! define array to record uy of node x
+
+! LINK180, strain of tendon
+*dim,strain100011,array,NumberOfLoadStep
+*dim,strain100020,array,NumberOfLoadStep
+*dim,strain100034,array,NumberOfLoadStep
+*dim,strain100048,array,NumberOfLoadStep
+*dim,strain100057,array,NumberOfLoadStep
+
+! LINK180, strain of common steel bar
+*dim,strain117,array,NumberOfLoadStep
+*dim,strain310,array,NumberOfLoadStep
+*dim,strain373,array,NumberOfLoadStep
+*dim,strain247,array,NumberOfLoadStep
+*dim,strain54,array,NumberOfLoadStep
+*dim,strain184,array,NumberOfLoadStep
+
+!strain of concrete
+*dim,strain3034,array,NumberOfLoadStep
+*dim,strain1837,array,NumberOfLoadStep
+
+
+
+
+
+
+*do, i, 1, 37
+	set,i,last	!Set the result data of (last substep of load step 1), as current
+	LoadKN(i)=(i-1)*5
+
+	!*get, UyOfNodeX(i), node, 2, u, y
+	UyOfNode1837(i)=uy(1837) ! obtain uy of node 1837(at bottom of Mid of beam)
+	
+	! StrainOfNode100011
+		! select 节点两侧的2个link单元
+		NumberOfNodes=100011
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+
+		strain100011(i)=LinkAxialStrain
+	! StrainOfNode100011
+
+	! StrainOfNode100020
+		! select 节点两侧的2个link单元
+		NumberOfNodes=100020
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain100020(i)=LinkAxialStrain
+	! StrainOfNode100020
+
+	! StrainOfNode100034
+		! select 节点两侧的2个link单元
+		NumberOfNodes=100034
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain100034(i)=LinkAxialStrain
+	! StrainOfNode100034
+
+	! StrainOfNode100048
+		! select 节点两侧的2个link单元
+		NumberOfNodes=100048
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain100048(i)=LinkAxialStrain
+	! StrainOfNode100048
+
+	! StrainOfNode100057
+		! select 节点两侧的2个link单元
+		NumberOfNodes=100057
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain100057(i)=LinkAxialStrain
+	! StrainOfNode100057
+
+	! StrainOfNode117
+		! select 节点两侧的2个link单元
+		NumberOfNodes=117
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain117(i)=LinkAxialStrain
+	! StrainOfNode117
+
+	! StrainOfNode310
+		! select 节点两侧的2个link单元
+		NumberOfNodes=310
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain310(i)=LinkAxialStrain
+	! StrainOfNode310
+
+	! StrainOfNode373
+		! select 节点两侧的2个link单元
+		NumberOfNodes=373
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain373(i)=LinkAxialStrain
+	! StrainOfNode373
+
+	! StrainOfNode247
+		! select 节点两侧的2个link单元
+		NumberOfNodes=247
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain247(i)=LinkAxialStrain
+	! StrainOfNode247
+
+	! StrainOfNode54
+		! select 节点两侧的2个link单元
+		NumberOfNodes=54
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain54(i)=LinkAxialStrain
+	! StrainOfNode54
+
+	! StrainOfNode184
+		! select 节点两侧的2个link单元
+		NumberOfNodes=184
+		nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+		esln,s  !selct elements attached to the selected nodes
+		esel,r,type,,2  !reselect frome selected elements by elements type 2
+		
+		!ESEL,ALL        !先选择 link 单元  
+		
+		*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+		*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+		
+		allsel
+		esel,s,,,ElementLinkNumberLower
+		etable,LinkAxialStrainJ,lepto,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+		!pretab,TestAxialStressJ          !列表单元轴应力  
+		allsel
+		esel,s,,,ElementLinkNumberHigher
+		etable,LinkAxialStrainI,lepto,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+		!pretab,TestAxialStressI          !列表单元轴应力  
+		!pletab,AxialStress,noav     !显示单元轴应力  
+		
+		esort,LinkAxialStrainJ  ! sort table
+		*get,LinkAxialStrainMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		esort,LinkAxialStrainI  ! sort table
+		*get,LinkAxialStrainMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+		!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+		
+		LinkAxialStrain=(LinkAxialStrainMaxJ+LinkAxialStrainMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+		
+		strain184(i)=LinkAxialStrain
+	! StrainOfNode184
+
+	! concrete node strain
+	allsel,all
+	! node3034
+		*get,strain3034(i),node,3034,epto,z
+	! node3034
+	
+	! node1837
+		*get,strain1837(i),node,1837,epto,z
+	! node1837
+
+*enddo
+
+*cfopen,DataOutput200_UY_StrandStrain_Anchor.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+*vwrite
+(' ','Number',',  ','load(kN)',',  ','UY-NODE1837', ',  ','strain100011', ',  ','strain100020', ',  ','strain100034', ',  ','strain100048', ',  ','strain100057') ! write title
+*VWRITE,sequ,LoadKN(1),UYOFNODE1837(1),strain100011(1),strain100020(1),strain100034(1), strain100048(1),strain100057(1)   ! auto output whole array from 1 to end
+(F4.0,7F)
+!(F4.0,9F100.4)	 ! output without format
+*cfclose
+
+
+*cfopen,DataOutput200_CommonSteelAndConcreteStrain_Anchor.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+*vwrite
+(' ','Number',',  ','strain117', ',  ','strain310', ',  ','strain373', ',  ','strain247', ',  ','strain54', ',  ','strain184', ',  ','strain3034', ',  ','strain1837',) ! write title
+*VWRITE,sequ,strain117(1),strain310(1),strain373(1) ,strain247(1) ,strain54(1) ,strain184(1) ,strain3034(1)  ,strain1837(1)   ! auto output whole array from 1 to end
+(F4.0,8F)
+!(F4.0,9F100.4)	 ! output without format
+*cfclose
+
+
+

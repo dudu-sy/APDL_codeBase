@@ -1,0 +1,30 @@
+cpdele,all  ! delete all cp
+
+! First, delete existed MISO and concrete
+! delete anchor--change anchor to concrete
+/prep7
+!*  concrete constitutive relation, 多线性等向强化， Isotropic hardening plasticity, Multilinear.
+TB,MISO,8,1,10,0 
+TBTEMP,0
+! TBPT,,0,0
+TBPT,,1.00E-04, 3.45E+00
+TBPT,,3.00E-04, 1.02E+01
+TBPT,,6.00E-04, 1.92E+01
+TBPT,,9.00E-04, 2.61E+01
+TBPT,,1.10E-03, 2.92E+01
+TBPT,,1.25E-03, 3.07E+01
+TBPT,,1.40E-03, 3.17E+01
+TBPT,,1.55E-03, 3.23E+01
+TBPT,,1.65E-03, 3.24E+01
+TBPT,,0.01, 3.24E+01
+
+!*  concrete failure criterion, only define fc and ft
+TB,CONC,8,1,9,  
+TBTEMP,0
+! TBDATA,,0.4,0.9,2.64,32.4,,   
+TBDATA,,0.4,0.9,2.64,-1,,  
+TBDATA,,,,,,,   
+
+
+! redefine K
+R,7,1e5

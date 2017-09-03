@@ -1,0 +1,10 @@
+!solve
+FINISH  
+/SOLU
+antype,0
+ALLSEL,ALL 
+OUTRES,erase
+OUTRES,ALL,ALL 
+NSUBST,010,0,0  
+TIME,05 
+SOLVE 

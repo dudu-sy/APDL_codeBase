@@ -1,0 +1,15 @@
+! sample........
+! adiv = ' | '
+! *dim,nds, ,10
+! *dim,temps,,10
+! *vfill,nds(1),ramp,1,1
+
+*cfopen,DataOutput1.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+*vwrite,'Number',',  ','load(kN)',',  ','UyOfNode_1837',  ! write title
+*VWRITE,sequ,LoadKN(1),UYOFNODE1837(1) ! auto output whole array from 1 to end
+!(A6,F10.4) ! ATTention: 数字位数 ， length of number
+(F,F)	 ! output without format
+*cfclose
+
+
+

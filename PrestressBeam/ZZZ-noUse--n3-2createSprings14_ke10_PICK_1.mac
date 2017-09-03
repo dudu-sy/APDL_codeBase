@@ -1,0 +1,102 @@
+!before mesh concrete volume
+/prep7
+CSYS,1,0
+ALLSEL,ALL
+!obtain number(belong to concrete solid) of nodes on the line of tendon
+!NSEL,s,loc,x,0     
+!NSEL,r,loc,y,55
+NSEL,S,pick !GUI pick node SpringNode_conc PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-PICK-
+
+CM,SpringNode_conc,node !define componet of spring nodes belong to concrete solid
+
+CMSEL,s,SpringNode_conc,node 
+*GET,SpringNode_conc_count,node,,count  !Get the sum of nodes in the selected set
+*DIM,Arr_SpringNode_conc,array,SpringNode_conc_count  !define arrary to save number of selected nodes  ,number(belong to concrete solid) of nodes on the line of tendon
+*GET,NodeI,node,,num,min  !obtain min number of selected nodes
+Arr_SpringNode_conc(1)=NodeI
+*DO,i,2,SpringNode_conc_count !obatin nodes number
+  Arr_SpringNode_conc(i)=NDNEXT(Arr_SpringNode_conc(i-1)) !NDNEXT(N) Next selected node having a node number greater than N.  
+*ENDDO
+!*MWRITE,Arr_SpringNode_conc,OutputData_Array,txt  !output Arr_SpringNode_conc to OutputData_Array.txt
+!*cfopen,arr.out
+!*VWRITE,'Arr_SpringNode_conc',Arr_SpringNode_conc(1)
+!*cfclos
+
+
+!sort arrary Arr_SpringNode_conc() according to NZ(Arr_SpringNode_conc()) from min to max...................................................
+!*do,i,1,SpringNode_conc_count-1       !!!MAY APDL don't support double loop
+!  *do,j,i+1,SpringNode_conc_count
+!    *if,NZ(Arr_SpringNode_conc(i)),gt,NZ(Arr_SpringNode_conc(j)),then !greater than >
+!      lsNode=Arr_SpringNode_conc(j)
+!      Arr_SpringNode_conc(j)=Arr_SpringNode_conc(i)
+!      Arr_SpringNode_conc(i)=lsNode
+!    *endif
+!  *enddo
+!*enddo
+
+!sort arrary Arr_SpringNode_conc() according to NZ(Arr_SpringNode_conc()) , use *MOPER, ParR, Par1, SORT, Par2......................................
+*DIM,Arr_SpringNode_conc_sorted,array,SpringNode_conc_count !array store sorted nodes number
+*DIM,tempArray,array,SpringNode_conc_count,2
+*DIM,rowArray,array,SpringNode_conc_count
+*DO,i,1,SpringNode_conc_count
+  tempArray(i,1)=Arr_SpringNode_conc(i)
+  tempArray(i,2)=NZ(Arr_SpringNode_conc(i))
+*ENDDO
+!*MWRITE,tempArray,OutputData_Array,txt  !output tempArray to OutputData_Array.txt
+*MOPER,rowArray,tempArray,sort,tempArray(1,2)  !.............................................
+!*MWRITE,resultArray,OutputData_Array,txt  !output resultArray to OutputData_Array.txt
+*DO,i,1,SpringNode_conc_count
+  Arr_SpringNode_conc_sorted(i)=tempArray(i,1)  
+*ENDDO
+!*MWRITE,Arr_SpringNode_conc_sorted,OutputData_Array,txt  !output Arr_SpringNode_conc_sorted to OutputData_Array.txt
+
+!create nodes on the location of SpringNode_conc, used to define tendon element
+*DIM,Arr_SpringNode_tendon,array,SpringNode_conc_count  !array save nodes number belong to tendon
+*DO,i,1,SpringNode_conc_count !copy to create SpringNode on tendon
+  lsNode=Arr_SpringNode_conc_sorted(i)
+  N,100000+i,NX(lsNode),NY(lsNode),NZ(lsNode)  !SpringNode_tendon number range: 100001~100000+SpringNode_conc_count
+  Arr_SpringNode_tendon(i)=100000+i
+  !NGEN,2,100000,Arr_SpringNode_conc_sorted(i),,,,,,  !copy node at the same location 
+  !Arr_SpringNode_tendon(i)=Arr_SpringNode_conc_sorted(i)+100000
+*ENDDO
+
+!create tendon link element
+TYPE,2
+MAT,2
+REAL,2   
+*DO,i,1,SpringNode_conc_count-1
+  E,Arr_SpringNode_tendon(i),Arr_SpringNode_tendon(i)+1  
+*ENDDO
+
+!create Springs
+! ET,3,14 !create combin14 
+! KEYOPT,3,2,1  !dof ux
+! ET,4,14 
+! KEYOPT,4,2,2  !uy  
+! ET,5,14 
+! KEYOPT,5,2,3  !uz
+! R,3,1E10  !combin14 real constant, K=1E10, it can be alter to match better. Or set different realconstant K at diffent nodes, to obtain better result.
+! R,4,1E10
+! R,5,1e10
+TYPE,3
+MAT,
+REAL,3
+*DO,i,1,SpringNode_conc_count 
+  E,Arr_SpringNode_tendon(i),Arr_SpringNode_conc_sorted(i)
+*ENDDO
+TYPE,4
+MAT,
+REAL,4
+*DO,i,1,SpringNode_conc_count
+  E,Arr_SpringNode_tendon(i),Arr_SpringNode_conc_sorted(i)
+*ENDDO
+TYPE,5
+MAT,
+REAL,5
+*DO,i,1,SpringNode_conc_count
+  E,Arr_SpringNode_tendon(i),Arr_SpringNode_conc_sorted(i)
+*ENDDO
+
+!couple nodes dof(Arr_SpringNode_tendon vs Arr_SpringNode_conc_sorted) at its two ends
+CP,next,all,Arr_SpringNode_tendon(1),Arr_SpringNode_conc_sorted(1)
+CP,next,all,Arr_SpringNode_tendon(SpringNode_conc_count),Arr_SpringNode_conc_sorted(SpringNode_conc_count)

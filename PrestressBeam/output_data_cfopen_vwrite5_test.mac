@@ -1,0 +1,11 @@
+
+*cfopen,DataOutput10_UY_Strain.txt ! output data to DataOutput1.out, it will REWRITE *.txt, don't forget BACKUP.
+*vwrite
+('Number',',  ','load(kN)',',  ','UyOfNode_1837', ',  ','StrainOfNode100034', ',  ','StrainOfNode54', ',  ','StrainOfNode184', ',  ','StrainOfNode117', ',  ','StrainOfNode310', ',  ','StrainOfNode373', ',  ','StrainOfNode247') ! write title
+*VWRITE,sequ,LoadKN(1),UYOFNODE1837(1),StrainOfNode100034(1),StrainOfNode54(1),StrainOfNode184(1), StrainOfNode117(1),StrainOfNode310(1),StrainOfNode373(1),StrainOfNode247(1)  ! auto output whole array from 1 to end
+(F4.0,9F10.4)
+!(F4.0,9F100.4)	 ! output without format
+*cfclose
+
+
+

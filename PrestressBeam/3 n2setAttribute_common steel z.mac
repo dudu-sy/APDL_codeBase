@@ -1,0 +1,16 @@
+!setAttribute_common steel z
+/prep7
+ALLSEL,all
+csys,1,0
+lsel,s,pick !pick common steel z.............
+
+
+
+cm,common_steel_z,line
+allsel,all
+cmsel,s,common_steel_z,line
+
+ESIZE,50 
+
+latt,4,4,2
+lmesh,ALL

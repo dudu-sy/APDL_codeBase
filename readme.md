@@ -1,2 +1,1 @@
-This is the APDL code for ANSYS.
-It constains codes used in a prestressed beam model.
+This is a codeBase of APDL, which contains codes used in my projects.

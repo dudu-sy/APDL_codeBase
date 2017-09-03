@@ -1,0 +1,44 @@
+ /post1  
+! select 节点两侧的2个link单元
+NumberOfNodes=100034
+nsel,s,,,NumberOfNodes   !select Node by NumberOfNodes
+esln,s  !selct elements attached to the selected nodes
+esel,r,type,,2  !reselect frome selected elements by elements type 2
+
+!ESEL,ALL        !先选择 link 单元  
+
+*get,ElementLinkNumberLower,elem,0,num,min  ! get编号较小的link单元 的编号 
+*get,ElementLinkNumberHigher,elem,0,num,max  ! get 编号较大的link单元 的编号 
+
+allsel
+esel,s,,,ElementLinkNumberLower
+etable,TestAxialStressJ,LS,2    !定义应力单元表，取编号较小的link单元 的 j 点数据
+!pretab,TestAxialStressJ          !列表单元轴应力  
+allsel
+esel,s,,,ElementLinkNumberHigher
+etable,TestAxialStressI,LS,1    !定义应力单元表  取编号较大的link单元 的 i 点数据 
+!pretab,TestAxialStressI          !列表单元轴应力  
+
+!pletab,AxialStress,noav     !显示单元轴应力  
+
+
+esort,TestAxialStressJ  ! sort table
+*get,TestAxialStressMaxJ,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+!*get,TestAxialStressMin2,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+
+esort,TestAxialStressI  ! sort table
+*get,TestAxialStressMaxI,sort,0,max  ! get Maximum value of last sorted item(nsort or esort command)
+!*get,TestAxialStressMin1,sort,0,min  ! get Maximum value of last sorted item(nsort or esort command)
+
+TestAxialStress=(TestAxialStressMaxJ+TestAxialStressMaxI)/2 !节点NumberOfNodes 处的轴向应力=（取编号较小的link单元 的 j 点数据 + 编号较大的link单元 的 i 点数据）/2
+
+
+  
+
+etable,AxialForce,smisc,1     !定义轴力单元表  
+
+pletab,AxialForce,noav         !显示单元轴向力  
+
+pretab,AxialForce                 !列表单元轴向力
+
+

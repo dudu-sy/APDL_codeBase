@@ -1,0 +1,19 @@
+!solve
+FINISH  
+/SOLU
+ALLSEL,ALL 
+antype,0	!静力分析
+TIME,10 
+
+OUTRES,erase
+OUTRES,ALL,ALL 
+outpr,all,all  !输出.output
+
+SOLCONTROL,ON
+NSUBST,20,100,5  
+autots,on	!自动时间步
+lnsrch,on !打开线性搜索
+!cnvtol,U	!使用位移收敛准则 
+!cnvtol,F	!使用力收敛准则 
+
+SOLVE 
